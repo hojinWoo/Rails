@@ -13,8 +13,6 @@
   윈도우의 경우 .msi
 - Git bash (작업은 git bash에서 함.)
 
-
-
 ```bash
 $ mkdir vagrant
 $ cd vagrant
@@ -24,7 +22,7 @@ $ mkdir vagrant
 ```
 
 ```ruby
-# vagrant폴더에서 Vagrantfile에서
+# vagrant폴더에서 Vagrantfile 수정
 
 # default server url 추가
 Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com') 
@@ -36,6 +34,10 @@ config.vm.box = "ubuntu/xenial64" 로 수정
 config.vm.network "forwarded_port", guest: 3000, host: 3000로 수정
 ```
 
+
+
+## 'Vagrantfile' 있는 곳에서 실행해야 함##
+
 ```bash
 # ubuntu 켜기
 $ vagrant up
@@ -43,6 +45,8 @@ $ vagrant up
 # ubuntu 접속
 $ vagrant ssh
 ```
+
+
 
 ```bash
 # vagrant 폴더에서 window와 ubuntu가 공유한다는 것.
@@ -121,19 +125,23 @@ Rails 5.2.0
 ## Ubuntu에서 할 일
 
 ```bash
-#vagrant (공유)폴더로 가서 작업하기
+# vagrant (공유)폴더로 가서 작업하기
 $ cd /vagrant
 
 # rails 생성 (app명)
 $ rails new sampleApp
 $ cd sampleApp
 
-# rails web server start
+# rails web server start (rails server)
 $ rails s
 ```
 
 
 
-### rails 접속
+## rails 접속 URL
 
-`localhost:3000` 접속하기
+`localhost:3000` 으로 접속하기
+
+
+
+### gem file 변경하면 `$ bundle install` 무조건 하기###

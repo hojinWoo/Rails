@@ -1,0 +1,13 @@
+<p>
+  <%= @name%>이 좋아하는 연예인
+</p>
+<%= image_tag @result %>
+
+<!-- 반복문 사용, 현재는 사진크기를 똑같이 css로 적용 X-->
+<div class="container">
+  <div class="row">
+    <% (1..5).to_a.each do |idx| %>
+    <div class="col-4"></div><%= image_tag "random#{idx}.jpg" %>
+    <% end %>
+  </div>
+</div>

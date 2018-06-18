@@ -7,7 +7,15 @@ Rails.application.routes.draw do
   get '/lotto' => 'home#lotto'
 
   #set variable
-  get 'welcome/:name' => 'home#welcome'
+  get '/welcome/:name' => 'home#welcome'
+
+  get '/google' =>'home#google'
+
+  get '/game' => 'home#game'
+  get '/gameresult' => 'home#gameresult'
+
+  get '/randomgame' => 'home#randomgame'
+  get '/randomgameresult' => 'home#randomgameresult'
 end
 
 ##sinatra version
