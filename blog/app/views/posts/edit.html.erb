@@ -1,0 +1,8 @@
+<h1>게시글 수정</h1>
+<p>Find me in app/views/posts/new.html.erb</p>
+<form action="/posts/<%= @post.id %>/update">
+  제목 : <input type="text" name="title" value="<%= @post.title%>"/>
+  <p/>
+  내용 : <textarea name="body"><%= @post.body%></textarea>
+  <input type="submit" value="수정" />
+</form>

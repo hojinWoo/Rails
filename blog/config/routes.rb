@@ -7,8 +7,12 @@ Rails.application.routes.draw do
 
   get 'posts/create'
 
+  # restful 아키텍처
+  get 'posts/:id/edit' => 'posts#edit'
+  get 'posts/:id/update' => 'posts#update'
   get 'posts/:id' => 'posts#show'
   get 'posts/:id/destroy' => 'posts#destroy'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

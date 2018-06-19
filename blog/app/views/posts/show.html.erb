@@ -1,3 +1,6 @@
 <p><%= @post.id %> 번째 게시물</p>
 <p>제목 : <%= @post.title %></p>
 <p>내용 : <%= @post.body %></p>
+<p>
+  <a href="/posts/<%=@post.id%>/edit">게시글 수정</a>
+</p>

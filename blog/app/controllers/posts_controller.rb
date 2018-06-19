@@ -25,8 +25,6 @@ class PostsController < ApplicationController
     redirect_to "/posts/#{post.id}"
   end
 
-
-
   #sinatra에서 없는. 게시물을 확인
   # variable routing
   def show
@@ -36,5 +34,15 @@ class PostsController < ApplicationController
   def destroy
     Post.find(params[:id]).destroy
     redirect_to '/'
+  end
+
+  def edit
+    @post = Post.find(params[:id])
+  end
+  def update
+     #update 후에는 return문이 true/false가 된다.
+      post = Post.find(params[:id])
+      post.update(title: params[:title], body: params[:body])
+      redirect_to "/posts/#{post.id}"
   end
 end
