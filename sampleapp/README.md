@@ -35,13 +35,14 @@ Things you may want to cover:
 ```bash
 $ cd /vagrant/sampleapp
 
-#'rails g controller home'
+# 'rails g controller home'
 # app/controllers/에 home_controller.rb 만들어짐
 # app/views에 home dir 만들어짐
 $ rails generate controller home
 #                           이름 action1이름 action2이름
 
 # controller 지우기
+$ 'rails d controller home'
 $ rails destroy controller home
 ```
 
