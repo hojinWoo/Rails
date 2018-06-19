@@ -1,0 +1,12 @@
+<!-- https://getbootstrap.com/docs/4.1/components/alerts/ -->
+<!-- flash message in bootstrap (flash : section활용을 통해 된 것.)-->
+<!-- div tag를 평소에는 숨기고 원할 때만 나오게 하기 -->
+<% if flash[:alert] %>
+  <div class="alert alert-danger" role="alert">
+    <%= flash[:alert] %>
+  </div>
+<% elsif flash[:notice] %>
+  <div class="alert alert-info" role="alert">
+    <%= flash[:notice] %>
+  </div>
+<% end %>
