@@ -8,7 +8,7 @@ class PostsController < ApplicationController
 
   def create
     # 1.
-    Post.create(title: params[:title],
+    post = Post.create(title: params[:title],
                 body: params[:body])
 
     ## 1-1. past use
@@ -20,6 +20,21 @@ class PostsController < ApplicationController
     #post.body = params[:body]
     #post.save
 
+    #text안에 변수를 넣을 때는 (textinterpolation)
+    #반드시 ""으로 묶어야 한다
+    redirect_to "/posts/#{post.id}"
+  end
 
+
+
+  #sinatra에서 없는. 게시물을 확인
+  # variable routing
+  def show
+    @post = Post.find(params[:id])
+  end
+  #################################
+  def destroy
+    Post.find(params[:id]).destroy
+    redirect_to '/'
   end
 end
