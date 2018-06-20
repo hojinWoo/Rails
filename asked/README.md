@@ -1,28 +1,37 @@
-== README
+# Asked 
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+`$ rails new asked`
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+##### 서버 시작 : `$ rails s -b 0.0.0.0`
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+
+- posts Controller 
+  `$ rails g controller posts index new create show edit update destroy ` 
+
+  - index
+  - Create  : `new` `create`
+  - Read     : `show`
+  - Update : `edit` `update`
+  - Delete   : `destroy`
+
+- post Model
+
+  `$ rails g model post username:string title:string content:text`
+
+  - string `username`
+  - string `title`
+  - text    `content`
+
+- user Model
+  `$ rails g model user username:string email:string password:string`
+
+  - string `username`
+  - string `email`
+  -  string `password`
+
+
+
+#### Model을 만들고 나서 꼭
+
+`$ rake db:migrate`
