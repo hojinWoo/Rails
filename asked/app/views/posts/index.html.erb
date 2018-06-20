@@ -36,9 +36,7 @@
       </form>
     </td>
     <td>
-      <form action="/posts/<%= p.id %>/destroy" >
-          <input value="게시글 삭제"  class="btn btn-outline-primary" type="submit"/>
-      </form>
+      <a class="btn btn-outline-primary" role="button" href="/posts/<%= p.id%>" data-method="delete" data-confirm="are you sure">게시글 삭제</a>
     </td>
   </tr>
   <% end %>

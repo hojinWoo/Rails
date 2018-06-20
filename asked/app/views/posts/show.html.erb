@@ -5,6 +5,7 @@
 
 
 <a href="/posts/<%= @post.id%>/edit">게시글 수정</a><p/>
-<a href="/posts/<%= @post.id%>" data-method="delete">게시글 삭제</a><p/>
+<!-- data-confirm : alert -->
+<a href="/posts/<%= @post.id%>" data-method="delete" data-confirm="are you sure">게시글 삭제</a><p/>
 
 <a href="/">게시글 목록</a>
