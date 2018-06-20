@@ -152,4 +152,4 @@ $ rails s
 
 - sampleapp : 처음 생성 및 간단한 예제
 - blog : 게시판 CRUD활용
-- asked
+- asked : 회원가입 및 게시판
