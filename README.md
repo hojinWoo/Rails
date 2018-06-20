@@ -153,3 +153,39 @@ $ rails s
 - sampleapp : 처음 생성 및 간단한 예제
 - blog : 게시판 CRUD활용
 - asked : 회원가입 및 게시판
+
+
+
+### Restful API
+
+URL로만으로도 어떤 작업을 하는 지 알 수 있게 된다.
+
+`$ rake routes`
+
+
+
+- #### GET
+
+  ##### 지정 리소스의 표시를 
+
+- #### POST
+
+  ##### 클라이언트 데이터를 서버로 보냄
+
+  Get방식은 url에 내용이 담기기 때문에 보안문제와 글자 수 제한에 문제가 있다.
+
+  `<form>`tag안에 글을 넣어야 한다
+
+  `  <input type="hidden" name = "authenticity_token" value= "<%= form_authenticity_token%>"`
+
+- #### PUT
+
+  ##### 서버로 보낸 데이터를 저장 or 지정 리소스의 부분만을 수정
+
+  `<input type="hidden" name = "_method" value= "put" />`
+
+  `<input type="hidden" name = "authenticity_token" value = "<%=form_authenticity_token%>">`
+
+- #### DELETE
+
+  ##### 서버로 보낸 데이터를 삭제

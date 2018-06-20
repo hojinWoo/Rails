@@ -1,6 +1,8 @@
 <h1>게시글 수정</h1>
 
-<form action = "/posts/<%= @post.id %>/update/">
+<form action = "/posts/<%= @post.id %>" method="post">
+  <input type="hidden" name = "_method" value= "put" />
+  <input type="hidden" name = "authenticity_token" value = "<%=form_authenticity_token%>">
   이름 : <input type = "text" name = "username" value="<%= @post.username%>"/>
   <p/>
   제목 : <input type = "text" name = "title" value="<%= @post.title%>"/>

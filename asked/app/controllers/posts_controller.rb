@@ -7,6 +7,7 @@ class PostsController < ApplicationController
   end
 
   def create
+    # get방식은 url에 정보가 나오기 떄문에 문제가 생김 & 글자에 길이제한이 있다.
     post = Post.create(username: params[:username], title: params[:title], content: params[:content])
     redirect_to "/posts/#{post.id}"
   end
@@ -26,6 +27,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
+    # get방식은 url 반복문으로 게시글을 다 지워버릴 수가 있다..
     Post.find(params[:id]).destroy
     redirect_to '/'
   end

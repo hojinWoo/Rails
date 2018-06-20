@@ -1,10 +1,29 @@
-<h1>게시글 쓰기</h1>
-
-<form action = "/posts/create">
-  이름 : <input type = "text" name = "username"/>
-  <p/>
-  제목 : <input type = "text" name = "title"/>
-  <p/>
-  내용 : <textarea type = "text" name = "content"></textarea>
-  <input type = "submit" value="등록" />
+<div class="row">
+  <div class="col-md-4 offset-md-5" >
+    <h1>게시글 쓰기</h1>
+  </div>
+</div>
+<!-- post로 보낼 때는 누가 보냈는지 정보를 꼭 같이 담아야 한다
+    hidden으로 보내기-->
+<form action = "/posts/create" method="post" >
+  <input type="hidden" name = "authenticity_token" value= "<%= form_authenticity_token%>"
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="form-group">
+        <label for="username">이름</label>
+        <input type="text" name = "username" class="form-control" id="username">
+      </div>
+      <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" name = "title" class="form-control" id="title">
+      </div>
+      <div class="form-group">
+        <label for="Textarea">내용</label>
+        <textarea class="form-control" name="content" id="content" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="col-md-5 offset-md-7">
+      <input value="등록" class="btn btn-outline-primary" type="submit"/>
+    </div>
+  </div>
 </form>
