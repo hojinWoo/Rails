@@ -8,8 +8,11 @@ class PostsController < ApplicationController
 
   def create
     # get방식은 url에 정보가 나오기 떄문에 문제가 생김 & 글자에 길이제한이 있다.
-    post = Post.create(username: params[:username], title: params[:title], content: params[:content])
-    redirect_to "/posts/#{post.id}"
+    #post = Post.create(username: params[:username], title: params[:title], content: params[:content])
+    Post.create(user_id: current_user.id, title: params[:title], content: params[:content])
+    flash[:notice] = "글 작성이 완료되었습니다"
+    #redirect_to "/posts/#{post.id}"
+    redirect_to "/"
   end
 
   def show
@@ -22,7 +25,8 @@ class PostsController < ApplicationController
 
   def update
     post = Post.find(params[:id])
-    post.update(username: params[:username], title: params[:title], content: params[:content])
+    #post.update(username: params[:username], title: params[:title], content: params[:content])
+    post.update(user_id: current_user.id, title: params[:title], content: params[:content])
     redirect_to "/posts/#{post.id}"
   end
 

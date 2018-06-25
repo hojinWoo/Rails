@@ -3,7 +3,10 @@
 <form action = "/posts/<%= @post.id %>" method="post">
   <input type="hidden" name = "_method" value= "put" />
   <input type="hidden" name = "authenticity_token" value = "<%=form_authenticity_token%>">
-  이름 : <input type = "text" name = "username" value="<%= @post.username%>"/>
+  <!-- 이름 : <input type = "text" name = "username" value="<%= @post.username%>"/> -->
+  <p>
+    이름 :  <%=@post.user.username%>  
+  </p>
   <p/>
   제목 : <input type = "text" name = "title" value="<%= @post.title%>"/>
   <p/>

@@ -1,19 +1,39 @@
 Rails.application.routes.draw do
+
+  # Users Controller
+  get 'users/index'
+
+  get 'singup' => 'users#new'
+  post 'users' => 'users#create'
+  get 'users/:id/posts' => 'users#posts'
+
+  get 'loginprocess' => 'users#loginprocess'
+
+  #get 'login' => 'users#login'
+  get 'login' => 'sessions#login'
+  #
+  post 'login' => 'sessions#new'
+
+  #get 'logout' => 'users#logout'
+  get 'logout' => 'sessions#logout'
+
+  # Posts controller
   root 'posts#index'
 
-  get 'posts/index'
-
-  get 'posts/new'
-
-  post 'posts/create'
-
-  get 'posts/:id' => 'posts#show'
-
-  get 'posts/:id/edit' => 'posts#edit'
-
-  put 'posts/:id' => 'posts#update'
-
-  delete 'posts/:id' => 'posts#destroy'
+  resources :posts
+  # get 'posts/index'
+  #
+  # get 'posts/new'
+  #
+  # post 'posts/create'
+  #
+  # get 'posts/:id' => 'posts#show'
+  #
+  # get 'posts/:id/edit' => 'posts#edit'
+  #
+  # put 'posts/:id' => 'posts#update'
+  #
+  # delete 'posts/:id' => 'posts#destroy'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

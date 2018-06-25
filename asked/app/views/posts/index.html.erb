@@ -25,8 +25,8 @@
   <% @posts.each do |p| %>
   <tr>
     <th scope="row"><%= p.id %></th>
-    <td><%= p.username %></td>
     <td><%= p.title %></td>
+    <td><%= p.user.username %></td>
     <td><%= p.content %></td>
     <td><%= p.created_at %></td>
     <td><%= p.updated_at %></td>
