@@ -21,5 +21,6 @@
 ### Comment(N)
 - comments Controller
   - CRUD - C
+    `$ rails g controller comments`
 - comment Model
   - `$ rails g model comment content:string post_id:integer` 

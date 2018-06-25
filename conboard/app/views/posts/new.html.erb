@@ -1,2 +1,8 @@
-<h1>Posts#new</h1>
-<p>Find me in app/views/posts/new.html.erb</p>
+<h1>게시글 쓰기</h1>
+
+<form action="/posts" method="post">
+  제목 : <input type="text" name="title"/><br />
+  내용 : <textarea type="text" name="content"></textarea><br />
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token%>"/>
+  <input type="submit" value="작성하기" />
+</form>

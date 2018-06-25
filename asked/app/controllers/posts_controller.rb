@@ -1,6 +1,5 @@
 class PostsController < ApplicationController
-  before_action :authorize, except: [:index]
-  before_action :set_post, only: [:show, :edit, :destroy]
+  before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   def index
     @posts = Post.all
@@ -11,7 +10,7 @@ class PostsController < ApplicationController
 
   def create
     # get방식은 url에 정보가 나오기 떄문에 문제가 생김 & 글자에 길이제한이 있다.
-    #post = Post.create(username: params[:username], title: params[:title], content: params[:content])
+    #@post = Post.create(username: params[:username], title: params[:title], content: params[:content])
     #Post.create(user_id: current_user.id, title: params[:title], content: params[:content])
     @post = current_user.posts.new(post_params)
     @post.save
@@ -50,8 +49,7 @@ class PostsController < ApplicationController
       @post = Post.find(params[:id])
     end
 
-  #strong parameter
-
+    #strong parameter
     def post_params
       # hash로 merge
       params.permit(:title, :content).merge(user_id: current_user.id)
