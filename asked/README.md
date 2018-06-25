@@ -154,6 +154,7 @@ protect_from_forgery with: :exception
   ```ruby
   #db/migrate/20180625_create_posts.rb
   ...
+  #    	t.reference :user_id
   	t.integer :user_id #foriegn key
   	t.string :title
   	t.text :content
@@ -186,9 +187,75 @@ protect_from_forgery with: :exception
      Post.find(1).user.username
      ```
 
-     
+
+
+#### Login
+
+```ruby
+# app/controllers/sessions_controller.rb
+def new 
+end
+
+def create # post '/login'
+    #로그인 성공 시
+    session[:user_id] = id
+end
+
+def destroy # get '/logout'
+    session.clear
+end
+```
 
 
 
+#### [before filter : Controller](http://guides.rubyonrails.org/action_controller_overview.html#filters)
+
+```ruby
+# app/controllers/posts_controller.rb
+# authorize methode 실행 시, 모든 action 중 index를 제외하고 실행
+before_action :authorize, except: [:index]
+```
+
+```ruby
+# app/controllers/application_controller.rb
+def authorize
+	unless current_user
+        flash[:alert] = "로그인을 해주세요."
+        redirect_to '/'
+    end
+end
+```
 
 
+
+#### helper method
+
+```ruby
+# app/controller/application_controller.rb
+
+# view에서도 활용하기 위해 helper method 사용
+helper_method :current_user
+
+def current_user
+    # @user의 값이 있으면, DB에 query를 보내지 않는다.
+	@user ||= User.find(session[:user_id]) if session[:user_id]
+end
+```
+
+- View에서 활용
+
+  ```erb
+  <!-- 1. 로그인이 되어있으면, 로그아웃 버튼 -->
+  <% if current_user %>
+  	<p><%= current_user.username %></p>
+  	<a href="/logout">로그아웃</a>
+  <!-- 2. 그게 아니면, 회원가입 + 로그인 버튼 -->
+  <% else %>
+  	<a href="/login">로그인</a>
+  	<a href="/signup">회원가입</a>
+  <% end %>
+  ```
+
+  
+
+	​	

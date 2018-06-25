@@ -10,10 +10,20 @@
 
 </head>
 <body>
-
-
-  <%= yield %>
-
+  <%= render 'layouts/navbar' %>
+  <%= render 'layouts/flash' %>
+  <div class="container">
+    <!-- 1. 로그인이 되어있으면, 로그아웃 버튼 -->
+    <% if current_user %>
+      <%= "#{current_user.username}님" %>
+      <a href="/logout">로그아웃</a>
+    <!-- 2. 그게 아니면, 회원가입 + 로그인 버튼 -->
+    <% else %>
+      <a href="/signup">회원가입</a>
+      <a href="/login">로그인</a>
+    <% end %>
+    <%= yield %>
+  </div>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

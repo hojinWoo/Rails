@@ -1,24 +1,22 @@
 Rails.application.routes.draw do
+  root 'posts#index'
 
   # Users Controller
-  get 'users/index'
-
-  get 'singup' => 'users#new'
+  # get 'users/index'
+  get 'signup' => 'users#new'
   post 'users' => 'users#create'
   get 'users/:id/posts' => 'users#posts'
 
-  get 'loginprocess' => 'users#loginprocess'
-
   #get 'login' => 'users#login'
-  get 'login' => 'sessions#login'
-  #
-  post 'login' => 'sessions#new'
+  get 'login' => 'sessions#new'
+
+  # get 'loginprocess' => 'users#loginprocess'
+  post 'login' => 'sessions#create'
 
   #get 'logout' => 'users#logout'
-  get 'logout' => 'sessions#logout'
+  get 'logout' => 'sessions#destroy'
 
   # Posts controller
-  root 'posts#index'
 
   resources :posts
   # get 'posts/index'

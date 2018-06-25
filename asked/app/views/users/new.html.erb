@@ -1,2 +1,10 @@
-<h1>Users#new</h1>
-<p>Find me in app/views/users/new.html.erb</p>
+<h1>회원가입</h1>
+
+<form action="/users" method="post">
+  이름 : <input type="text" name="username" /> <br />
+  이메일 : <input type="email" name="email" /> <br />
+  비밀번호 : <input type="password" name="password" /><br />
+  비밀번호 확인 : <input type="password" name="password_confirmation" /><br />
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" /><br />
+  <input type="submit" /><br />
+</form>

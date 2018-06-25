@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-4 offset-md-5" >
-    <h1>게시글</h1>
+    <h1>무엇이든 물어보세요</h1>
   </div>
   <div class="col-md-4 offset-md-10">
     <form action="/posts/new" >
@@ -12,7 +12,7 @@
   <thead>
     <tr>
       <th scope="col">번호</th>
-      <th scope="col">이름</th>
+      <th scope="col">작성자</th>
       <th scope="col">제목</th>
       <th scope="col">내용</th>
       <th scope="col">생성날짜</th>
@@ -25,8 +25,8 @@
   <% @posts.each do |p| %>
   <tr>
     <th scope="row"><%= p.id %></th>
-    <td><%= p.title %></td>
     <td><%= p.user.username %></td>
+    <td><%= p.title %></td>
     <td><%= p.content %></td>
     <td><%= p.created_at %></td>
     <td><%= p.updated_at %></td>
@@ -36,7 +36,7 @@
       </form>
     </td>
     <td>
-      <a class="btn btn-outline-primary" role="button" href="/posts/<%= p.id%>" data-method="delete" data-confirm="are you sure">게시글 삭제</a>
+      <a class="btn btn-outline-primary" role="button" href="/posts/<%= p.id%>" data-method="delete" data-confirm="are you sure?">게시글 삭제</a>
     </td>
   </tr>
   <% end %>
