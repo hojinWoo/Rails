@@ -25,3 +25,5 @@ require 'faker'
     content: Faker::OnePiece.quote
   )
 end
+
+# seed file로 csv 파일 불러오는 것을 많이 사용

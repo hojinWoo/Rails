@@ -145,6 +145,14 @@ config.scoped_views = true #232 line 주석 해제하고 수정하기
 
 ----
 
+### seeds.rb
+
+```ruby
+# db/seeds.rb
+# db를 만들 때 주로 사용 (ex. csv)
+# 수정 후 command에서 $ rake db:seed 입력 하면 적용
+```
+
 
 
 ### Dummy data 만들기
@@ -155,18 +163,64 @@ config.scoped_views = true #232 line 주석 해제하고 수정하기
 gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 ```
 
+```ruby
+# db/seeds.rb
+# make dummy data
+require 'faker'
+10.times do
+  Post.create(
+    title: Faker::OnePiece.unique.character,
+    content: Faker::OnePiece.quote
+  )
+end
+```
+
 
 
 #### [Querry 기본 문법 - 배열](http://guides.rubyonrails.org/active_record_querying.html#array-conditions)
 
+`pry-rails`로 console에서 사용했다.
+
 ```ruby
-# title로 order하기
+# title column data 기준으로 order하기
 Post.order(:title)
+Post.order(:title: :desc) #내림차순
+Post.order(:title: :asc)  #오름차순
 
 # column 중 제목이 aa인 게시글의 정보 표출
 Post.where("title = ?", "aa")
 
 # aa가 들어있는 모든 게시글 표출
 Post.where("title like ?", "%aa%")
+
+# 처음부터 3개 가져오기
+Post.first(3)
+# 뒤에서부터 3개 가져오기
+Post.last(3)
+```
+
+```ruby
+# root page로 갈 때 기록되는 것들을 볼 수 있다.
+> app.get('/')
+
+# 응답에 대한 data
+> r = app.response
+> cd r
+# .methods처럼 할 수 있는 것들을 볼 수 있다.
+> ls
+
+> r.cookies #cookie
+> r.header #http 요청 시 header
+
+# 로그인 요청
+> app.post('/users/sign_in',email: "11@11", password: '123456')
+> app.session[:session_id]
+
+> app.controller.params # 넘어오는 것들 및 경로를 볼 수 있다.
+
+# 10번 글 요청
+app.get('/posts/10') # 로그인이 안 되어 있는 경우 302 error
+
+> app.flash # 경고문을 볼 수 있다.
 ```
 
