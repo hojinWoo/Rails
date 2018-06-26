@@ -1,0 +1,6 @@
+<!-- edit 과 new의 중복 코드 한 번에 유지하기 위해 -->
+<%= form_for @post do |f| %>
+  <%= f.text_field :title %>
+  <%= f.text_area :content %>
+  <%= f.submit %>
+<% end %>

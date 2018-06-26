@@ -224,3 +224,10 @@ app.get('/posts/10') # 로그인이 안 되어 있는 경우 302 error
 > app.flash # 경고문을 볼 수 있다.
 ```
 
+
+
+### [Form helper](http://guides.rubyonrails.org/form_helpers.html)
+
+- [form for](http://guides.rubyonrails.org/form_helpers.html#binding-a-form-to-an-object)을 쓸 때 더 유용
+  -  form_for method로부터 form buidler 객체를 만들어준다.
+- post, put 사용시 기본으로 token을 만들어준다.
