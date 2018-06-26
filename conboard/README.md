@@ -231,3 +231,20 @@ app.get('/posts/10') # 로그인이 안 되어 있는 경우 302 error
 - [form for](http://guides.rubyonrails.org/form_helpers.html#binding-a-form-to-an-object)을 쓸 때 더 유용
   -  form_for method로부터 form buidler 객체를 만들어준다.
 - post, put 사용시 기본으로 token을 만들어준다.
+
+
+
+### [Simple Form](https://github.com/plataformatec/simple_form)
+
+- `gem 'simple_form'`
+
+- bootstrap 적용 할 때 사용.
+
+- cf) `'rails_db'`에도 같이 들어 옴.
+
+  ```bash
+  # for Bootstrap
+  $ rails generate simple_form:install --bootstrap
+  ```
+
+  
