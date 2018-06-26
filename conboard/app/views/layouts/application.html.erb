@@ -11,7 +11,9 @@
 <body>
   <% if user_signed_in? %>
     <!-- p태그로 감싸야 화면에 보이지 않는다   -->
-    <p> <%= current_user.email %></p>
+    <p>
+      <%= current_user.email %>
+    </p>
     <a href="/users/sign_out" data-method = "delete">로그아웃</a>
   <% else %>
     <a href="/users/sign_in">로그인</a>

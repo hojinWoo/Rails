@@ -1,8 +1,21 @@
 <h1>수정해</h1>
-<form action="/posts/<%=@post.id%>/update" method="post">
+<!-- <form action="/posts/<%=@post.id%>" method="post">
   <input type="text" name="title" value="<%=@post.title%>"/> <br />
   <textarea name="content"><%=@post.content%></textarea> <br />
   <input type="hidden" name="_method" value="put" />
   <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
   <input type="submit" />
-</form>
+</form> -->
+
+<%= form_tag("/posts/#{@post.id}", method: 'put') do %>
+  <%= text_field_tag :title, @post.title %>
+  <%= text_area_tag :content, @post.content %>
+  <%= submit_tag "작성 완료" %>
+<% end %>
+
+<!-- rule : resources:post 중 경로를 쓰지 않아도 @post가 비어있지 않기 때문에 update로 간다.-->
+<%= form_for @post do |f| %>
+  <%= f.text_field :title %>
+  <%= f.text_area :content %>
+  <%= f.submit %>
+<% end %>
