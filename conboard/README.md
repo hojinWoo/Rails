@@ -1,17 +1,6 @@
 # README.md
 
-- #좋아요 해시태그 검색 기능
-- SNS 로그인
-- JS & MapAPI활용
-- 채팅
-- 파일 올리기
-- 게시판 기능(pagination)
-- 유저 기능 (관리자 등 role)
-- model - validation, query
-
-
-
-### Version
+##### Version
 
 - ruby : 2.3.5
 - rails : 4.2.10
@@ -244,39 +233,180 @@ app.get('/posts/10') # 로그인이 안 되어 있는 경우 302 error
 > app.flash # 경고문을 볼 수 있다.
 ```
 
+-----
+
+### Initial
+
+```bash
+# scaffold : 구조물
+$ rails new scaffold_test
+
+$ cd scaffold_test
+
+$ rails g scaffold post title:string content:text
+
+$ rake db:migrate
+
+$ rails s -b 0.0.0.0
+```
+
+> 기존 rails 와 다른 것
+>
+> > controller
+>
+> > view
+>
+> > routes
+
+| Helper         | HTTP Verb | Path                      | Controller#Action |
+| -------------- | --------- | ------------------------- | ----------------- |
+| posts_path     | GET       | /posts(.:format)          | posts#index       |
+|                | POST      | /posts(.:format)          | posts#create      |
+| post_path      | GET       | /posts/:id(.:format)      | posts#show        |
+|                | PATCH     | /posts/:id(.:format)      | posts#update      |
+|                | PUT       | /posts/:id(.:format)      | posts#update      |
+|                | DELETE    | /posts/:id(.:format)      | posts#destro      |
+| new_post_path  | GET       | /posts/new(.:format)      | posts#new         |
+| edit_post_path | GET       | /posts/:id/edit(.:format) | posts#edit        |
+
+>  `<a>` tag로는 Get 요청, `<form>` tag로 Post 요청만 보낼 수 있다.
+
+### link_to : url helper(http://api.rubyonrails.org/v5.2/classes/ActionView/Helpers/UrlHelper.html)
+
+```erb
+<%= link_to '글 보기', @post %>
+<%= link_to '글 보기', post_path, class: "btn btn-warning" %>
+<%= link_to '새 글 쓰기', new_post_path %>
+<%= link_to '글 수정', edit_post_path %>
+<%= link_to '모든 글 보기', posts_path %>
+<%= link_to '글 삭제', post_path, method: :delete, data: {confirm: "지울래?"} %>
+```
 
 
-### [Form helper](http://guides.rubyonrails.org/form_helpers.html)
+
+### [Form_tag, Form_for](http://guides.rubyonrails.org/form_helpers.html)
 
 - [form for](http://guides.rubyonrails.org/form_helpers.html#binding-a-form-to-an-object)을 쓸 때 더 유용
   -  form_for method로부터 form buidler 객체를 만들어준다.
 - post, put 사용시 기본으로 token을 만들어준다.
 
+```erb
+<form action="/posts" method="post">
+  <input type="text" name="title" /> <br />
+  <textarea name="content"></textarea> <br />
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token%>">
+  <input type="submit" />
+</form>
+```
+
+```erb
+<%= form_tag('/posts', method: 'post') do %>
+  <%= text_field_tag :title %>
+  <%= text_area_tag :content %>
+  <%= submit_tag "뿅!"%>
+<% end %>
+```
+
+```erb
+<!-- edit.html.erb, new.html.erb 중복 코드-->
+<%= form_for @post do |f| %>
+  <%= f.text_field :title %>
+  <%= f.text_area :content %>
+  <%= f.submit %>
+<% end %>
+```
+
+- `form_for` 주요 특징
+  - 특정한 model의 객체를(Post) 조작하기 위해 사용
+  - 별도의 URL(action = "/"), method(get, post, put) 등을 명시하지 않아도 된다.
+  - Controller의 해당 Action(`new`, `edit`) 에서 반드시 @post에 Post Object가 있어야 한다.
+    - `new`   : `@post = Post.new`
+    - `edit` : `@post = Post.find(id)`
+  - 각 input field의 symbol은 반드시 @post의 column명과 일치해야 한다.
 
 
-### [Simple Form](https://github.com/plataformatec/simple_form)
 
-- `gem 'simple_form'`
+### [gem : simple form](https://github.com/plataformatec/simple_form)
 
-- bootstrap 적용 할 때 사용.
+1. Gemfile 설정
 
-- cf) `'rails_db'`에도 같이 들어 옴.
+   ```ruby
+   gem 'simple_form'
+   ```
 
-  ```bash
-  # for Bootstrap
-  $ rails generate simple_form:install --bootstrap
-  ```
+2. `bundle install`
 
-  
+   ```bash
+   $ bundle install
+   ```
+
+3. 설치
+
+   ```bash
+   $ rails generate simple_form:install --bootstrap
+   ```
+
+4. Bootstrap 프로젝트 적용
+
+   - CDN을 `applicataion.html.erb`
+
+5. Form helper 만들기
+
+   ```erb
+   <%= simple_form_for @post do |f| %>
+   	<%= f.input :title %>
+   	<%= f.input :content %>
+   	<%= f.button :submit, class: "btn-primary" %>
+   <% end %>
+   ```
+
+
 
 ------
+
+
+
+### Model validation
+
+```ruby
+# app/model/post.rb
+...
+  validates :title, presence: {message: "제목을 입력해주세요."},
+                    length: {maximum: 30,
+                            too_long: "제목은 %{count}자 이내로 입력해주세요." }
+  validates :content, presence: {message: "내용을 입력해주세요."}
+...
+```
+
+```ruby
+def create
+    @post = Post.new(post_params)
+    respond_to do |format|
+        if @post.save
+            format.html {redirect_to '/', notice: } #notice는 flash[:notice]에 값을 담기 위해서
+        else
+            format.html {render :new}
+            format.json {render json: @post.errors}
+        end
+    end
+end
+```
+
+```erb
+<!--app/views/posts/_form.html.erb -->
+..
+	<%= f.error_notification %>
+..
+```
+
+
 
 ### Helper
 
 코드의 양을 줄일 수 있다.
 
 ```ruby
-# app/helper/application_helper.rb
+# app/helpers/application_helper.rb
 def flash_message(type)
     case type
 		when "alert" then "alert alert-warning"
@@ -285,9 +415,10 @@ def flash_message(type)
 end
 ```
 
-```ruby
-# app/views/layouts/application.html.erb
+```erb
+<!-- app/views/layouts/application.html.erb -->
 <% flash.each do |key, value| %>
+	<!--role은 없어도 무방 -->
 	<div class = "<%= flash_message(key) %>" role="alert">
 		<%= value %>
     </div>
@@ -298,34 +429,47 @@ end
 
 ### [Kaminary](https://github.com/kaminari/kaminari)
 
-```ruby
-gem 'kaminari'
+1. gemfile
 
-# $ bundle install
-```
+   ```ruby
+   gem 'kaminari'
+   ```
 
-```ruby
-# use kaminari - 1page에 5개의 글만 보일 수 있도록 설정
-@posts = Post.all.page(1).per(5)
+   > $ bundle install
 
-# 게시판 번호 이동을 하기 위해서 이동된 page 번호를 받아오기.
-@posts = Post.all.page(params[:page]).per(5)
-```
+2. controller 설정
 
-```erb
-<!-- 게시판의 번호 이동을 표현해준다 -->
-<div class="d-flex justify-content-center">
-  <%= paginate @posts %>
-</div>
-```
+   ```ruby
+   # app/controllers/posts_controller.rb
+   def index
+       # use kaminari - 1page에 5개의 글만 보일 수 있도록 설정
+   	@posts = Post.all.page(1).per(5)
+   
+   	# 게시판 번호 이동을 하기 위해서 이동된 page 번호를 받아오기.
+   	@posts = Post.all.page(params[:page]).per(5)
+   end
+   ```
 
-> bootstrap 적용하려면 따로 [kaminari view](https://github.com/amatsuda/kaminari_themes) 를 설정하면 된다
->
-> 예시)
->
-> $ rails g kaminari:views bootstrap4
+3. view 설정
 
+   ```erb
+   <!-- 게시판의 번호 이동을 표현해준다 -->
+   <div class="d-flex justify-content-center">
+     <%= paginate @posts %>
+   </div>
+   ```
 
+4. theme 설정
+
+   bootstrap 적용하려면 따로 [kaminari view](https://github.com/amatsuda/kaminari_themes) 를 설정하면 된다
+
+   예시)
+
+   ```bash
+   $ rails g kaminari:views bootstrap4
+   ```
+
+   
 
 ### 권한 부여
 
@@ -345,13 +489,14 @@ gem 'cancancan', '~> 2.0'
    $ rails g cancan:ability
    ```
 
-2. sdf
+2. check ability
 
    ```ruby
    # app/models/ability.rb
+   # login 안 되어 있을 때 권한
    can :read, Post
    return unless user.present?
-   #edit, delete 사용자가 같을 때 가능
+   # login 후 edit, delete 등 사용자가 같을 때 가능
    can :manage, Post, user_id: user_id
    can :create, Comment
    ```
@@ -360,7 +505,7 @@ gem 'cancancan', '~> 2.0'
 
    ```ruby
    # app/controllers/post_controller.rb
-   #restful하기 때문에 Loaders 사용
+   # 이 코드는 restful하기 때문에 Loaders 사용. 아닌 경우 각각 지정 필요.
    load_and_authorize_resource
    ```
 
@@ -369,14 +514,29 @@ gem 'cancancan', '~> 2.0'
    ```ruby
    # app/controllers/application_controller.rb
    # 일치하지 않을 때 handling하기
-   rescue_from CanCan::AccessDenied do |exception|
-   	respond_to do |format|
-           format.json { head :forbidden, content_type: 'text/html' }
-           format.html { redirect_to main_app.root_url, notice: exception.message }
-           format.js   { head :forbidden, content_type: 'text/html' }
-   	end
-   end
+   ..
+       rescue_from CanCan::AccessDenied do |exception|
+           respond_to do |format|
+               format.json { head :forbidden, content_type: 'text/html' }
+               format.html { redirect_to main_app.root_url, notice: exception.message }
+               format.js   { head :forbidden, content_type: 'text/html' }
+           end
+       end
+   ..
    ```
 
    
+
+-----
+
+##### 앞으로 할 일 들
+
+- #좋아요 해시태그 검색 기능
+- SNS 로그인
+- JS & MapAPI활용
+- 채팅
+- 파일 올리기
+- 게시판 기능(pagination)
+- 유저 기능 (관리자 등 role)
+- model - validation, query
 

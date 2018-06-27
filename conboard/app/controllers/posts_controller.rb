@@ -1,9 +1,9 @@
 class PostsController < ApplicationController
-  #cancancan: 권한 설정
-  load_and_authorize_resource
   #시작 전에 method를 호출하기 위해서, 쓰고 싶을 때 호출하는 것은 따로 before_action을 안 줘도 된다.
   before_action :authenticate_user!, except: :index
   before_action :set_post, only: [:show, :edit, :update, :destroy]
+  #cancancan: 권한 설정을 before 이후에 하는 것이 좋다.
+  load_and_authorize_resource
   def index
     #@posts = Post.all
     # use kaminari - 1page에 5개의 글만 보일 수 있도록 설정
@@ -73,8 +73,16 @@ class PostsController < ApplicationController
   end
 
   def update
-    @post.update(post_params)
-    redirect_to "/posts/#{@post.id}"
+    #@post.update(post_params)
+    #redirect_to "/posts/#{@post.id}"
+    respond_to do |format|
+      if @post.update(post_params)
+        format.html{redirct_to @post, notice: '글 수정 완료'}
+      else
+        format.html{ render :edit}
+        format.json{ render json: @post.error}
+      end
+    end
   end
 
   def destroy
