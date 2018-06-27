@@ -4,7 +4,12 @@ class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   def index
     @posts = Post.all
-    respond_to
+    # post로 json 요청이 오면 json 형식으로 볼 수 있다.
+    # http://localhost:3000/posts.json
+    respond_to do |format|
+     format.html
+     format.json {render json: @posts}
+   end
   end
 
   def new
