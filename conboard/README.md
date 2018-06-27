@@ -54,54 +54,69 @@ $ git remote remove origin
 
 1. `devise` gem 설치
 
-```ruby
-# Gemfile
-gem 'devise'
-```
+   ```ruby
+   # Gemfile
+   gem 'devise'
+   ```
 
-```bash
-$ bundle install
+   ```bash
+   $ bundle install
+   ```
 
-$ rails generate devise:install
-# config/initializers/devise.rb file 생성
+2. devise 설치
 
-$ rails generate devise User 
-# cf 지울 때는 rails d model user
-# db/migrate/20180625_devise_create_users.rb
-# model/user.rb
-# config/routes.rb :: devise_for :users
+   ```bash
+   $ rails generate devise:install
+   ```
 
-$ rake db:migrate
-```
+   > `config/initialize/devise.rb` 만들어짐.
 
-- routes 확인
+3. user 모델 만들기
 
-  | new_user_session_path         | GET    | /users/sign_in(.:format)       | devise/sessions#new         |
-  | ----------------------------- | ------ | ------------------------------ | --------------------------- |
-  | user_session_path             | POST   | /users/sign_in(.:format)       | devise/sessions#create      |
-  | destroy_user_session_path     | DELETE | /users/sign_out(.:format)      | devise/sessions#destroy     |
-  | user_password_path            | POST   | /users/password(.:format)      | devise/passwords#create     |
-  | new_user_password_path        | GET    | /users/password/new(.:format)  | devise/passwords#new        |
-  | edit_user_password_path       | GET    | /users/password/edit(.:format) | devise/passwords#edit       |
-  |                               | PATCH  | /users/password(.:format)      | devise/passwords#update     |
-  |                               | PUT    | /users/password(.:format)      | devise/passwords#update     |
-  | cancel_user_registration_path | GET    | /users/cancel(.:format)        | devise/registrations#cancel |
-  | user_registration_path        | POST   | /users(.:format)               | devise/registrations#create |
-  | new_user_registration_path    | GET    | /users/sign_up(.:format)       | devise/registrations#new    |
-  | edit_user_registration_path   | GET    | /users/edit(.:format)          | devise/registrations#edit   |
-  |                               | PATCH  | /users(.:format)               | devise/registrations#update |
-  |                               | PUT    | /users(.:format)               | devise/registrations#update |
-  |                               | DELETE | /users(.:format)               |                             |
+   ```bash
+   $ rails generate devise User 
+   ```
 
-  > 회원가입 : `get 'users/sign_up'`
-  >
-  > 로그인 : `get 'users/sign_in'`
-  >
-  > 로그아웃 : `delete 'users/sign_out'`
+   > db/migrate/20180625_devise_create_users.rb
+   >
+   > model/user.rb
+   >
+   > config/routes.rb :: devise_for :users
+   >
+   > >  cf. 지울 때는 rails d model user
 
+4. migration
 
+   ```bash
+   $ rake db:migrate
+   ```
 
-##### helper method
+5. routes 확인
+
+| new_user_session_path         | GET    | /users/sign_in(.:format)       | devise/sessions#new         |
+| ----------------------------- | ------ | ------------------------------ | --------------------------- |
+| user_session_path             | POST   | /users/sign_in(.:format)       | devise/sessions#create      |
+| destroy_user_session_path     | DELETE | /users/sign_out(.:format)      | devise/sessions#destroy     |
+| user_password_path            | POST   | /users/password(.:format)      | devise/passwords#create     |
+| new_user_password_path        | GET    | /users/password/new(.:format)  | devise/passwords#new        |
+| edit_user_password_path       | GET    | /users/password/edit(.:format) | devise/passwords#edit       |
+|                               | PATCH  | /users/password(.:format)      | devise/passwords#update     |
+|                               | PUT    | /users/password(.:format)      | devise/passwords#update     |
+| cancel_user_registration_path | GET    | /users/cancel(.:format)        | devise/registrations#cancel |
+| user_registration_path        | POST   | /users(.:format)               | devise/registrations#create |
+| new_user_registration_path    | GET    | /users/sign_up(.:format)       | devise/registrations#new    |
+| edit_user_registration_path   | GET    | /users/edit(.:format)          | devise/registrations#edit   |
+|                               | PATCH  | /users(.:format)               | devise/registrations#update |
+|                               | PUT    | /users(.:format)               | devise/registrations#update |
+|                               | DELETE | /users(.:format)               |                             |
+
+> 회원가입 : `get 'users/sign_up'`
+>
+> 로그인 : `get 'users/sign_in'`
+>
+> 로그아웃 : `delete 'users/sign_out'`
+
+6. helper method
 
 - `user_sign_in?` : 유저가 로그인 했는지 안했는지를 true/false 리턴
 
@@ -111,27 +126,30 @@ $ rake db:migrate
 
   : 로그인 되어있는 유저 검증(필터)
 
+7. View 파일 수정하기
 
+   ```bash
+   # user의 View 만들기
+   # app/views/users
+   $ rails generate devise:views users
+   ```
 
-##### View 파일 수정하기
+8. config 수정
 
-```bash
-# user의 View 만들기
-# app/views/users
-$ rails generate devise:views users
+   ```ruby
+   # config/initializers/devise.rb
+   config.scoped_views = true #232 line 주석 해제하고 수정하기
+   ```
 
-# config/initializers/devise.rb
-config.scoped_views = true #232 line 주석 해제하고 수정하기
-# 서버 재부팅
-```
+   > 모든 initailizers 폴더 안에 있는 설정은 서버 재부팅 필요
 
-##### custom column 추가하기
+9. [custom column 추가하기](https://github.com/plataformatec/devise#strong-parameters) 
 
-1. migration 파일에 원하는 column 
+   1. migration 파일에 원하는 column 
 
-2. `app/views/devise/registrations/new.html.erb` input 추가
+   2. `app/views/devise/registrations/new.html.erb` input 추가
 
-3. `app/controllers/application_controller.rb`
+   3. `app/controllers/application_controller.rb`
 
    ```ruby
    before_action :configure_permitted_parameters, if: :devise_controller?
@@ -143,7 +161,9 @@ config.scoped_views = true #232 line 주석 해제하고 수정하기
    end
    ```
 
-----
+
+
+----------
 
 ### seeds.rb
 
@@ -177,7 +197,7 @@ end
 
 
 
-#### [Querry 기본 문법 - 배열](http://guides.rubyonrails.org/active_record_querying.html#array-conditions)
+#### [Active Record query interface](http://guides.rubyonrails.org/active_record_querying.html#array-conditions)
 
 `pry-rails`로 console에서 사용했다.
 
