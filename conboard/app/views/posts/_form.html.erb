@@ -1,12 +1,15 @@
 <!-- edit 과 new의 중복 코드 한 번에 유지하기 위해 -->
 <!-- <%= form_for @post do |f| %>
-  <%= f.text_field :title %>
-  <%= f.text_area :content %>
-  <%= f.submit %>
+  <%# f.error_messages %>
+  <%# f.text_field :title %>
+  <%# f.text_area :content %>
+  <%# f.submit %>
 <% end %> -->
 
 <!-- simple_form으로 bootstrap 적용 하기 위해 변경된 code -->
 <%= simple_form_for @post do |f| %>
+  <!-- config/locales/simple_form.en.yml 파일에서 message 수정 가능 -->
+  <% f.error_notification %>
   <%= f.input :title %>
   <%= f.input :content %>
   <%= f.button :submit, class: "btn-primary"%>
