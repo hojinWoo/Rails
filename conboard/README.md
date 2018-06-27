@@ -268,3 +268,59 @@ app.get('/posts/10') # 로그인이 안 되어 있는 경우 302 error
   ```
 
   
+
+------
+
+### Helper
+
+코드의 양을 줄일 수 있다.
+
+```ruby
+# app/helper/application_helper.rb
+def flash_message(type)
+    case type
+		when "alert" then "alert alert-warning"
+		when "notice" then "alert alert-primary"
+	end
+end
+```
+
+```ruby
+# app/views/layouts/application.html.erb
+<% flash.each do |key, value| %>
+	<div class = "<%= flash_message(key) %>" role="alert">
+		<%= value %>
+    </div>
+<% end %>
+```
+
+
+
+### [Kaminary](https://github.com/kaminari/kaminari)
+
+```ruby
+gem 'kaminari'
+
+# $ bundle install
+```
+
+```ruby
+# use kaminari - 1page에 5개의 글만 보일 수 있도록 설정
+@posts = Post.all.page(1).per(5)
+
+# 게시판 번호 이동을 하기 위해서 이동된 page 번호를 받아오기.
+@posts = Post.all.page(params[:page]).per(5)
+```
+
+```erb
+<!-- 게시판의 번호 이동을 표현해준다 -->
+<div class="d-flex justify-content-center">
+  <%= paginate @posts %>
+</div>
+```
+
+> bootstrap 적용하려면 따로 [kaminari view](https://github.com/amatsuda/kaminari_themes) 를 설정하면 된다
+>
+> 예시)
+>
+> $ rails g kaminari:views bootstrap4

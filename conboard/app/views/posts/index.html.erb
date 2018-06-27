@@ -5,7 +5,12 @@
   <p><%= post.id %></p>
   <p><%= post.title %></p>
   <p><%= post.content %></p>
-  <%= link_to '글보기', post , class: "btn btn-primary"%> 
+  <%= link_to '글보기', post , class: "btn btn-primary"%>
   <!-- <a href="/posts/<%=post.id%>">글 보러가기</a> -->
   <hr />
 <% end %>
+<br />
+<!-- 밑에 게시판 번호 이동 가능 -->
+<div class="d-flex justify-content-center">
+  <%= paginate @posts %>
+</div>
