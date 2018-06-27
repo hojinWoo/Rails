@@ -1,4 +1,6 @@
 class PostsController < ApplicationController
+  #cancancan: 권한 설정
+  load_and_authorize_resource
   #시작 전에 method를 호출하기 위해서, 쓰고 싶을 때 호출하는 것은 따로 before_action을 안 줘도 된다.
   before_action :authenticate_user!, except: :index
   before_action :set_post, only: [:show, :edit, :update, :destroy]
@@ -6,9 +8,9 @@ class PostsController < ApplicationController
     #@posts = Post.all
     # use kaminari - 1page에 5개의 글만 보일 수 있도록 설정
     #@posts = Post.all.page(1).per(5)
-    @posts = Post.all.page(params[:page]).per(5)
+    #@posts = Post.all.page(params[:page]).per(5)
     # reverse
-    #@posts = Post.order(created_at: :desc).page(params[:page]).per(5)
+    @posts = Post.order(created_at: :desc).page(params[:page]).per(5)
 
     # post로 json 요청이 오면 json 형식으로 볼 수 있다.
     # http://localhost:3000/posts.json
@@ -62,6 +64,12 @@ class PostsController < ApplicationController
   end
 
   def edit
+    # if current_user.id == @post.user.id
+    # else
+    #
+    #   redirct_to '/'
+    # end
+
   end
 
   def update

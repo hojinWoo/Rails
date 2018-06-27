@@ -324,3 +324,59 @@ gem 'kaminari'
 > 예시)
 >
 > $ rails g kaminari:views bootstrap4
+
+
+
+### 권한 부여
+
+삭제 및 수정을 권한 주기(직접 코드로 할 수 있지만 controller가 무거워지므로 gem을 이용하기로 함)
+
+#### [cancancan](https://github.com/CanCanCommunity/cancancan)
+
+```ruby
+# install
+# rails version이 4.2 이상이므로
+gem 'cancancan', '~> 2.0'
+```
+
+1. Abilities 정의하기
+
+   ```bash
+   $ rails g cancan:ability
+   ```
+
+2. sdf
+
+   ```ruby
+   # app/models/ability.rb
+   can :read, Post
+   return unless user.present?
+   #edit, delete 사용자가 같을 때 가능
+   can :manage, Post, user_id: user_id
+   can :create, Comment
+   ```
+
+3. Controller helpers
+
+   ```ruby
+   # app/controllers/post_controller.rb
+   #restful하기 때문에 Loaders 사용
+   load_and_authorize_resource
+   ```
+
+4. Handle Unauthorized access
+
+   ```ruby
+   # app/controllers/application_controller.rb
+   # 일치하지 않을 때 handling하기
+   rescue_from CanCan::AccessDenied do |exception|
+   	respond_to do |format|
+           format.json { head :forbidden, content_type: 'text/html' }
+           format.html { redirect_to main_app.root_url, notice: exception.message }
+           format.js   { head :forbidden, content_type: 'text/html' }
+   	end
+   end
+   ```
+
+   
+

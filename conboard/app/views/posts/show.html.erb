@@ -3,11 +3,17 @@
 <%= @post.title %>
 <%= @post.content %>
 
-<%= link_to '수정하기', edit_post_path(@post) %>
-<%= link_to '삭제하기', @post, method: :delete, data: {confirm: '정말 지울거야?'} %>
-<!-- <a href="/posts/<%= @post.id %>/edit">수정하기</a>
-<a href="/posts/<%= @post.id %>" data-method="delete" data-confirm="삭제할래?">삭제하기</a> -->
-<hr />
+<!-- 여기서 안 보여줄 수 있지만 이렇게 하면 url로 접근이 가능하므로 controller에서도 수정 필요. -->
+<%# if current_user.id == @post.user.id %>
+<!-- can gem을 이용해서 설정 -->
+<% if can? :edit, @post %>
+  <%= link_to '수정하기', edit_post_path(@post) %>
+  <%= link_to '삭제하기', @post, method: :delete, data: {confirm: '정말 지울거야?'} %>
+  <!-- <a href="/posts/<%= @post.id %>/edit">수정하기</a>
+  <a href="/posts/<%= @post.id %>" data-method="delete" data-confirm="삭제할래?">삭제하기</a> -->
+  <hr />
+<% end %>
+
 
 <form action="/posts/<%= @post.id%>/comments" method="post">
   <input type="text" name="content" /><br />
