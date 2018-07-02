@@ -1,0 +1,358 @@
+<div id="map" style="width:100%;height:400px;"></div>
+
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=NYV_JVa67oiW3K5Yt_hc&submodules=geocoder"></script>
+<script>
+  // naver.maps을 N으로 축약하려면 전부 다 바꿔야 된다.
+
+  //지도 컨트롤
+  var mapOptions = {
+      scaleControl: false,
+      logoControl: true,
+      mapDataControl: false,
+      zoomControl: true,
+      zoomControlOptions:{
+        position: N.Position.RIGHT_CENTER
+      },
+      minZoom: 2,
+      maxZoom: 12
+      // 1 to 14
+  };
+
+  // 네이버 map을 div tag와 연결
+  //var map = new naver.maps.Map('map');
+  //지도 컨트롤 추가
+  var map = new N.Map('map', mapOptions);
+
+  //move
+  var naver_addr = new N.LatLng(37.3595704, 127.105399);
+  //지도 제주도로 이동하기(위도-북위, 경도-동경)
+  var jeju = new N.LatLng(33.3590628, 126.534361);
+  var cityhall = new N.LatLng(37.5698411, 126.9783927);
+
+  //csv data
+  var data =[];
+  var indices = [];
+
+  map.setCenter(cityhall); // 중심 좌표 이동
+  map.setZoom(10);     // 줌 레벨 변경
+
+  getData(); //because of hoisting
+
+  //ajax code to call data
+  function getData(){
+    //현재 보고 있는 맵의 경계선을 받아오기, 객체 리턴
+    var bounds = map.getBounds();
+    //객체 data를 json의 string형태로 변환하기
+    var max = bounds._max; //우측 위
+    var min = bounds._min; //좌측 아래
+
+    $.ajax({
+      url: '/map_data',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        max: JSON.stringify(max),
+        min: JSON.stringify(min),
+        authenticity_token: $("[name='csrf-token']").attr('content'),
+        indices: JSON.stringify(indices)},
+      success: function(result){
+        //data = result;
+        data = result[0]; //새로 로딩된 학교들의 data
+        alert('success');
+        // console.log(data);
+        //array를 array에 push 할 수 없다.
+        indices = indices.concat(result[1]); //새로 로딩된 학교들의 id가 추가된다.
+        createElements();
+      }
+    });
+  };
+
+
+  //example -------------------------------------------------------------------
+  // var data = [
+  //     {name: "아리차이", address: "서울특별시 관악구 신림동길 4", link: "https://store.naver.com/restaurants/detail?id=11704746", x: 126.9282765, y: 37.4876462},
+  //     {name: "한우등촌골", address: "서울특별시 강서구 등촌로 201", link: "https://store.naver.com/restaurants/detail?id=35966485", x:126.86273, y: 37.5476847},
+  //     {name: "수유부추곱창", address: "서울특별시 강북구 도봉로87길 26-21", link: "https://store.naver.com/restaurants/detail?id=37111836", x: 127.0247721, y: 37.6393168},
+  //     {name: "강천민물장어", address:"서울특별시 강동구 올림픽로 834 한강시티라이프", link: "https://store.naver.com/restaurants/detail?id=18905396", x: 127.1297937, y: 37.5553916 }
+  //   ];
+
+  var markers=[];
+  var infoWindows = [];
+
+  //add icon
+  /*
+  for(var i = 0; i< data.length; i++){
+    restaurant = data[i];
+    markers[i] = new N.Marker({
+      position: new N.LatLng(restaurant.y, restaurant.x),
+      map: map,
+      icon: {
+        url: 'https://navermaps.github.io/maps.js/docs' +'/img/example/sally.png',
+        //보이는 부분의 size를 조정한다.
+        size: new naver.maps.Size(50, 52),
+        //div는 그래도 두고 이미지를 이동시킨다. 짤리게 되는 현상(왼쪽, 오른쪽)
+        origin: new naver.maps.Point(0, 0),
+        //div 자체가 이동
+        anchor: new naver.maps.Point(25, 26) //size의 반 만큼 div 자체가 이동하니 중앙으로 위치
+    },
+    //1(계속 움직임)과 2(처음 한 번만 떨어짐)만 있고 정지도 가능
+    animation: 1
+    });
+    var contentString = [
+      '<div class="iw_inner">',
+      '<h3>'+restaurant.name+'</h3>',
+      '<p>'+restaurant.address+'</p>',
+      '<a href='+restaurant.link+'>알아보기</a>'
+    ].join('')
+    infoWindows[i] = new N.InfoWindow({
+      content: contentString
+    });
+    */
+
+    //비동기식이기 때문에 data.length가 먼저 실행되고 나중에 data를 가져오게 된다.
+    //그래서 for문도 함수로 만들어서 data를 가져오고 나서 함수를 호출하는 식으로 바꿔야 한다.
+
+    function createElements(){
+      alert('create!');
+
+      var new_markers=[]
+      var new_infoWindows=[]
+
+      for(var i = 0; i< data.length; i++){
+        var school = data[i];
+        console.log(school);
+        var marker = new N.Marker({
+          position: new N.LatLng(school.lat, school.lng),
+          map: map,
+          icon: {
+            url: 'https://navermaps.github.io/maps.js/docs' +'/img/example/sally.png',
+            //보이는 부분의 size를 조정한다.
+            size: new naver.maps.Size(50, 52),
+            //div는 그래도 두고 이미지를 이동시킨다. 짤리게 되는 현상(왼쪽, 오른쪽)
+            origin: new naver.maps.Point(0, 0),
+            //div 자체가 이동
+            anchor: new naver.maps.Point(25, 26) //size의 반 만큼 div 자체가 이동하니 중앙으로 위치
+        },
+        //1(계속 움직임)과 2(처음 한 번만 떨어짐)만 있고 정지도 가능
+        animation: 1
+        });
+        var contentString = [
+          '<div class="iw_inner">',
+          '<h3>'+school.name+'</h3>',
+          '<p>'+school.address+'</p>',
+          '<a href="http://www.naver.com">알아보기</a>'
+        ].join('')
+        var infowindow = new N.InfoWindow({
+          content: contentString
+        });
+
+        //marker를 만 개 넣으려고 하지 말고 각 학교의 Id 정보를 보관해서 서버에 요청 시
+        //없는 데이터만 받도록 할 것
+        new_markers.push(marker);
+        new_infoWindows.push(infowindow);
+
+        //지금 코드는 새로운 창으로 옮길 때 update 될 시 기존에 있는 것도 또 넣게 된다.
+        markers.push(marker);
+
+        //marker들이 infowindow의 정보를 유지하고 있기 때문에 필요가 없어짐.
+        //infoWindows.push(infowindow);
+
+      }
+      addEvent(new_markers, new_infoWindows);
+    };
+
+  /*function getClickHandler(seq) {
+      return function(e) {
+          var marker = markers[seq],
+              infoWindow = infoWindows[seq];
+
+          if (infoWindow.getMap()) { //정보가 맵에 표시되어 있는지
+              infoWindow.close();
+          } else {
+              infoWindow.open(map, marker);
+          }
+      }
+  }*/
+  //새로 들어온 것만 event 달기
+  function getClickHandler(new_markers, new_infoWindows, seq) {
+      return function(e) {
+          var marker = new_markers[seq],
+              infoWindow = new_infoWindows[seq];
+
+          if (infoWindow.getMap()) { //정보가 맵에 표시되어 있는지
+              infoWindow.close();
+          } else {
+              infoWindow.open(map, marker);
+          }
+      }
+  }
+
+  /*for (var i=0, ii=markers.length; i<ii; i++) {
+      N.Event.addListener(markers[i], 'click', getClickHandler(i));
+  }*/
+/*
+  function addEvent(){
+    alert("event!")
+    for (var i=0, ii=markers.length; i<ii; i++) {
+        N.Event.addListener(markers[i], 'click', getClickHandler(i));
+    }
+    //이동 시마다 추가하기 위해서
+    updateMarkers(map, markers);
+  }
+  */
+  // 새로 들어온 marker만 추가하기
+  function addEvent(new_markers, new_infoWindows){
+    alert("event!")
+    for (var i=0, ii=new_markers.length; i<ii; i++) {
+        N.Event.addListener(new_markers[i], 'click', getClickHandler(new_markers, new_infoWindows, i));
+    }
+    //이동 시마다 추가하기 위해서
+    updateMarkers(map, markers);
+  }
+  //**** 보이는 영역만 마커 추가하기 (실제 data는 존재)******
+  //idle : 지도의 움직임이 종료되었을 때(유휴 상태) 이벤트가 발생합니다.
+  /*naver.maps.Event.addListener(map, 'idle', function() {
+    updateMarkers(map, markers);
+  });*/
+  naver.maps.Event.addListener(map, 'idle', function() {
+    getData();
+  });
+
+  function updateMarkers(map, markers) {
+
+      var mapBounds = map.getBounds();
+      var marker, position;
+
+      for (var i = 0; i < markers.length; i++) {
+
+          marker = markers[i]
+          position = marker.getPosition();
+
+          if (mapBounds.hasLatLng(position)) {
+              showMarker(map, marker);
+          } else {
+              hideMarker(map, marker);
+          }
+      }
+  }
+
+  function showMarker(map, marker) {
+
+      if (marker.getMap()) return;
+      marker.setMap(map);
+  }
+
+  function hideMarker(map, marker) {
+
+      if (!marker.getMap()) return;
+      marker.setMap(null);
+  }
+  //------------------------------------------------------------------------
+
+
+  //marker ----------------------------------------------
+  /*var marker = new N.Marker({
+    position: naver_addr,
+    map: map
+  });
+  //new marker
+  var marker2 = new N.Marker({
+    position: cityhall,
+    map: map
+  });
+  var marker3 = new N.Marker({
+    position: jeju,
+    map: map
+  });
+
+  var markers = [marker,marker2,marker3]
+
+  //infoWindow(마커 위에 정보창 올리기)
+  var contentString = [
+    '<div class="iw_inner">',
+    '   <h3>네이버팩토리</h3>',
+    '   <p>서울특별시 중구 태평로1가 31 | 서울특별시 중구 세종대로 110 서울특별시청<br>',
+    '       02-120 | 공공,사회기관 > 특별,광역시청<br>',
+    '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
+    '   </p>',
+    '</div>'
+  ].join('');
+  var contentString2 = [
+      '<div class="iw_inner">',
+      '   <h3>서울특별시청</h3>',
+      '   <p>서울특별시 중구 태평로1가 31 | 서울특별시 중구 세종대로 110 서울특별시청<br>',
+      '       <img src="./img/hi-seoul.jpg" width="55" height="55" alt="서울시청" class="thumb" /><br>',
+      '       02-120 | 공공,사회기관 > 특별,광역시청<br>',
+      '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
+      '   </p>',
+      '</div>'
+  ].join('');
+  var contentString3 = [
+      '<div class="iw_inner">',
+      '   <h3>제주도</h3>',
+      '   <p>서울특별시 중구 태평로1가 31 | 서울특별시 중구 세종대로 110 서울특별시청<br>',
+      '       <img src="./img/hi-seoul.jpg" width="55" height="55" alt="서울시청" class="thumb" /><br>',
+      '       02-120 | 공공,사회기관 > 특별,광역시청<br>',
+      '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
+      '   </p>',
+      '</div>'
+  ].join('');
+
+  //원하는 contents를 infoWindow에 넣어서 생성하기
+  var infowindow = new N.InfoWindow({
+    content: contentString
+  });
+  var infowindow2 = new N.InfoWindow({
+    content: contentString2
+  });
+  var infowindow3 = new N.InfoWindow({
+    content: contentString3
+  });
+
+  var infoWindows = [infowindow, infowindow2, infowindow3]
+  */
+  // Handler 추가(개별적) //
+  // naver.maps.Event.addListener(marker, "click", function(e) {
+  //     // getMap : map에 정보창이 열려 있으면 정보창에 관한 정보 리턴, 닫혀있으면 null return
+  //     if (infowindow.getMap()) {
+  //         infowindow.close();
+  //     } else {
+  //         infowindow.open(map, marker);
+  //     }
+  // });
+  // naver.maps.Event.addListener(marker2, "click", function(e) {
+  //     if (infowindow2.getMap()) {
+  //         infowindow2.close();
+  //     } else {
+  //         infowindow2.open(map, marker2);
+  //     }
+  // });
+  // naver.maps.Event.addListener(marker3, "click", function(e) {
+  //     if (infowindow3.getMap()) {
+  //         infowindow3.close();
+  //     } else {
+  //         infowindow3.open(map, marker3);
+  //     }
+  // });
+  // ----------------------------------------------------------
+
+
+  // marker에서 addListener 중복 없애기
+  // 해당 마커의 인덱스를 seq라는 클로저 변수로 저장하는 이벤트 핸들러를 반환합니다.
+  // closure**
+  /*function getClickHandler(seq) {
+      return function(e) {
+          var marker = markers[seq],
+              infoWindow = infoWindows[seq];
+          if (infoWindow.getMap()) {
+              infoWindow.close();
+          } else {
+              infoWindow.open(map, marker);
+          }
+      }
+  }
+  for (var i=0, ii=markers.length; i<ii; i++) {
+      naver.maps.Event.addListener(markers[i], 'click', getClickHandler(i));
+  }
+  */
+</script>

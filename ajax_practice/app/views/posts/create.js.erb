@@ -1,0 +1,11 @@
+//create.js.erb
+//` ` : 사이에 있는 것은 줄바꿈이 있더라도 상관없이 한 문자열로 받아 준다
+var new_post = `<tr>
+  <td><%= @post.title %></td>
+  <td><%= @post.content %></td>
+  <td><%= link_to 'Show', @post %></td>
+  <td><%= link_to 'Edit', edit_post_path(@post) %></td>
+  <td><%= link_to 'Destroy', @post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>`
+// save file
+$('tbody').append(new_post)
