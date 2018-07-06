@@ -7,7 +7,7 @@ var like_btn = $('a[data-id="<%=@post_id%>"]')
 // like_btn.children().toggleClass('far')
 // like_btn.children().toggleClass('fas')
 
-
+// data-method로 해도 되지만 F12에서 확인 할 때마다 바뀌지 않아서 replaceWith를 사용해서 변경
 like_btn.next().text(<%= Post.find(@post_id).liked_users.count%>)
 like_btn.replaceWith(`
   <%= link_to "posts/#{@post_id}/like", data: {id: @post_id}, remote: true, method: :delete do%>

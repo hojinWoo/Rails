@@ -1,6 +1,15 @@
 # rails 설치
 
-## vaygrant
+##### 폴더 구성 설명 (순서대로 점점 발전되는 과정)
+
+- sampleapp : 처음 생성 및 간단한 예제
+- blog : 게시판 CRUD활용
+- asked : 회원가입 및 게시판
+- conboard : gem을 활용한 쉽게 만든 게시판
+
+
+
+### vaygrant
 
 코드 수정은 window에서 하고 서버 활용은 vaygrant활용
 
@@ -145,15 +154,6 @@ $ rails s
 
 
 ### gem file 변경하면 `$ bundle install` 무조건 하기###
-
-
-
-폴더 구성
-
-- sampleapp : 처음 생성 및 간단한 예제
-- blog : 게시판 CRUD활용
-- asked : 회원가입 및 게시판
-- conboard : gem을 활용한 쉽게 만든 게시판
 
 
 

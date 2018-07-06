@@ -73,6 +73,7 @@ $ rails g model School name:string address:string lng:float lat:float
 
 ```ruby
 # db/seeds.rb
+# model에 접근할 때는 첫 글자는 대문자로 해야 한다.
 require 'csv'
 CSV.foreach(Rails.root.join('school.csv'), headers: true) do |row|
   School.create! row.to_hash

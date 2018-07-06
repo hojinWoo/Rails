@@ -9,28 +9,30 @@
   <p>내용 : <%= post.content %></p>
   <%= link_to '글보기', post , class: "btn btn-primary"%>
   <!-- '좋아요' CRUD로 짠다면 -->
-  <%if current_user.liked_posts.include? post %>
-    <!-- remote: true => ajax처리로 하기 위해  , rendering은 create.js.erb로 응답 받으려고 함-->
-    <%= link_to "posts/#{post.id}/like", data: {id: post.id}, remote: true, method: :delete do%>
-      <i class="fas fa-heart"></i>
+  <% if current_user %>
+    <%if current_user.liked_posts.include? post %>
+      <!-- remote: true => .js ajax처리로 하기 위해  , rendering은 create.js.erb로 응답 받으려고 함-->
+      <%= link_to "posts/#{post.id}/like", data: {id: post.id}, remote: true, method: :delete do%>
+        <i class="fas fa-heart"></i>
+      <%end%>
+    <%else%>
+      <%= link_to "posts/#{post.id}/like", data: {id: post.id}, remote: true, method: :put do%>
+        <i class="far fa-heart"></i>
+      <%end%>
     <%end%>
-  <%else%>
-    <%= link_to "posts/#{post.id}/like", data: {id: post.id}, remote: true, method: :put do%>
-      <i class="far fa-heart"></i>
-    <%end%>
-  <%end%>
+  <% end %>
   <span>
     <%= post.liked_users.count %>
   </span>
   <!-- icon이 SVG라면 class만 바꾸면 되기 때문에 간편 -->
   <!-- '좋아요' 한 개의 get으로 짠다면 -->
-  <!-- <%= link_to "posts/#{post.id}/likeA" do%>
-    <%if current_user.liked_posts.include? post %>
+  <!-- <%# link_to "posts/#{post.id}/likeA" do%>
+    <%#if current_user.liked_posts.include? post %>
       <i class="fas fa-heart"></i>
-    <%else %>
+    <%#else %>
       <i class="far fa-heart"></i>
-    <%end %>
-  <%end%> -->
+    <%#end %>
+  <%#end%> -->
   <!-- <a href="/posts/<%=post.id%>">글 보러가기</a> -->
   <hr />
 <% end %>
