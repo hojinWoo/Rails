@@ -529,6 +529,67 @@ gem 'cancancan', '~> 2.0'
 
 -----
 
+### 좋아요 기능 추가(N:M)
+
+[좋아요 icon ](https://fontawesome.com/how-to-use/on-the-web/setup/getting-started?using=svg-with-js)
+
+```bash
+# db 추가
+$ rails g model like
+# controller 추가
+$ rails g controller likes
+```
+
+```ruby
+# 좋아요 table의 row가 나온다
+Like.where(post_id: 20)
+Like.find(20).likes
+```
+
+```ruby
+# user 객체가 나온다
+Post.find(20).liked_users
+```
+
+```ruby
+#찾는 방법 
+# 1. 가장 쉬운 방법
+Like.find_by(user_id:1 ,post_id:20)
+# 2. 해당 사람이 좋아요 한 글 전부 찾는다
+current_user = User.find(1)
+current_user.liked_posts
+
+# 3. 좋아요 존재 여부
+current_user.liked_posts.map{|post| post.id}.include? 20 #return boolean
+
+# 4. 객체에 존재 여부
+current_user.liked_posts.include? Post.find(20)
+
+```
+
+
+
+#### 아이콘 변경 처리
+
+- `jquery`로 처리하게 되면 `toggleclass`로 할 수 있다
+
+  ```javascript
+  //fas나 far을 쓰면서 바꿀 수 있다.
+  $('a[data-id="23"]').children().toggleClass('fas')
+  
+  $('a[data-id="23"]').attr('href','/posts/23/dislike')
+  ```
+
+  
+
+- ##### 나중에는 ajax로 처리할 것 => url이 안 보여야 하기 때문
+
+
+
+
+
+-------
+
 ##### 앞으로 할 일 들
 
 - #좋아요 해시태그 검색 기능
