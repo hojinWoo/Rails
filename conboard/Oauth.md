@@ -59,12 +59,10 @@ class User < ActiveRecord::Base
 	...
    
    	 # User.find_auth
-      def self.find_auth(auth)
+     def self.find_auth(auth)
         #identity가 있는지?
-        identity = Identity.find_or_create_by(
-          provider: auth.info.provider,
-          uid: auth.info.uid
-        ) #있으면 user_id가 있기 때문에 user object가 return하고
+        identity = Identity.find_auth(auth)
+        #있으면 user_id가 있기 때문에 user object가 return하고
         # 없으면 새로 만들어준다 => user는 nil
         user = identity.user
         #user가 있는지?
@@ -75,8 +73,11 @@ class User < ActiveRecord::Base
             password: Devise.friendly_token[0,20]
           )
         end
-        user.save
-        identity.save
+        user.save!
+        if identity.user != user
+            identity.user = user
+            identity.save!
+        end
         user #return을 user로 하기 위해
       end
     ...
@@ -98,12 +99,59 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     #user가 실제 저장되었는지 체크
     if @user.persisted?
-      redirect_to '/'
+      sign_in_and_redirect @user, event: :authentication
     else
       #저장이 안 된 경우 다시 로그인 하도록 하기
       redirect_to new_user_registration_path
     end
   end
 end
+```
+> app/views/devise/shared/_links.html.erb에서
+>
+> `devise_mapping.omniauthable?`에서 자동으로 처리해준다
+
+
+3. code 간결화
+
+```ruby
+# app/models/identity.rb
+class Identity < ActiveRecord::Base
+  belongs_to :user
+  def self.find_auth(auth)
+    find_or_create_by(
+      provider: auth.provider,
+      uid: auth.uid
+    )
+  end
+end
+```
+
+
+#### facebook 로그인 시 프로필 사진도 가져와서 바꾸기
+
+```bash
+$ rails g migration AddProfileImgToUsers profile_img
+$ rake db:migrate
+```
+
+> 만일 facebook 로그인을 이전에 했었다면 db가 변경되었기 때문에 기존 user를 지우고 다시 로그인 해야 한다.
+
+```ruby
+# app/models/user.rb
+if user.nil?
+    user = User.new(
+        ...
+        profile_img: auth.info.image #추가
+        )
+end
+```
+
+```erb
+<!--app/views/layouts/application.html.erb 파일 수정
+gravatar(current_user)가 기존에 있다면 주석 처리하기-->
+<% if user_signed_in? %>
+	<%= image_tag current_user.profile_img, class: "rounded-circle"%>
+ 	...
 ```
 

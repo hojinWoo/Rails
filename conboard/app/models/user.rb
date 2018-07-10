@@ -15,22 +15,25 @@ class User < ActiveRecord::Base
   # User.find_auth
   def self.find_auth(auth)
     #identity가 있는지?
-    identity = Identity.find_or_create_by(
-      provider: auth.provider,
-      uid: auth.uid
-    ) #있으면 user_id가 있기 때문에 user object가 return하고
+    identity = Identity.find_auth(auth)
+    #있으면 user_id가 있기 때문에 user object가 return하고
     # 없으면 새로 만들어준다 => user는 nil
     user = identity.user
-    #user가 있는지?
+    # identity의 등록된 user가 있는지?
     if user.nil?
-      user = User.new(
-        email: auth.info.email,
-        name: auth.info.name,
-        password: Devise.friendly_token[0,20]
-      )
+      user = User.find_by(email: auth.info.email) #중복 체크
+      #같은 email을 쓰는 user가 있는 지
+      if user.nil?
+        user = User.new(
+          email: auth.info.email,
+          name: auth.info.name,
+          password: Devise.friendly_token[0,20],
+          profile_img: auth.info.image
+        )
+      end
     end
     user.save!
-    if idntity.user != user
+    if identity.user != user
         identity.user = user
         identity.save!
     end
