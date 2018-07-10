@@ -123,7 +123,7 @@
 
 0. OS별 설치 방법
 
-   ```
+   ```bash
    # ubuntu
    $ sudo apt-get update
    $ sudo apt-get install -y imagemagick
@@ -134,7 +134,7 @@
 
 1. Gemfile
 
-   ```
+   ```ruby
    gem 'mini_magick'
    ```
 
@@ -177,7 +177,7 @@
    gem 'figaro'
    ```
 
-   ```
+   ```bash
    $ bundle install
    $ bundle exec figaro install
    ```
@@ -187,8 +187,9 @@
    AWS_ACCESS_KEY_ID: asdf
    AWS_SECRET_ACCESS_KEY: 1q2w3e
    AWS_REGION: ap-northeast-2
-   S3_BUCKET_NAME: tak-fake-insta
+   S3_BUCKET_NAME: conboard
    ```
+   > figrao를 통해 github에 인증 키를 숨길 수 있다. 
 
 4. Gemfile[ `fog-aws`](https://github.com/fog/fog-aws)
 

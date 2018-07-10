@@ -13,12 +13,12 @@ class User < ActiveRecord::Base
   has_many :liked_posts, through: :likes, source: :post
 
   # User.find_auth
-  def self.find_auth(auth)
+  def self.find_auth(auth, signed_in_resource=nil) #signed_in_resource : 로그인 된 사람이 있으면 return 
     #identity가 있는지?
     identity = Identity.find_auth(auth)
     #있으면 user_id가 있기 때문에 user object가 return하고
     # 없으면 새로 만들어준다 => user는 nil
-    user = identity.user
+    user = signed_in_resource ? signed_in_resource : identity.user
     # identity의 등록된 user가 있는지?
     if user.nil?
       user = User.find_by(email: auth.info.email) #중복 체크
