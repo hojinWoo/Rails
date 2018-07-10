@@ -11,7 +11,7 @@ token으로 인증절차가 이루어진다.
 gem 'omniauth-facebook'
 ```
 
-> bundle install
+> $ bundle install
 
 ```ruby
 # app/models/user.rb line 추가
@@ -38,8 +38,6 @@ devise_for :users, controllers: {
 	config.omniauth :facebook, ENV['FB_APP_ID'], ENV['FB_APP_SECRET']
 ...
 ```
-
-
 
 ```bash
 # 로그인은 카카오 페이스북 등 1:N 관계이기 때문에 인증 관계 table을 만든다
@@ -110,8 +108,6 @@ end
 > app/views/devise/shared/_links.html.erb에서
 >
 > `devise_mapping.omniauthable?`에서 자동으로 처리해준다
-
-
 3. code 간결화
 
 ```ruby
@@ -128,7 +124,7 @@ end
 ```
 
 
-#### facebook 로그인 시 프로필 사진도 가져와서 바꾸기
+### facebook 로그인 시 프로필 사진도 가져와서 바꾸기
 
 ```bash
 $ rails g migration AddProfileImgToUsers profile_img
@@ -157,7 +153,7 @@ gravatar(current_user)가 기존에 있다면 주석 처리하기-->
 
 
 
-### 카카오 로그인
+## 카카오 로그인
 
 [카카오 개발자]()
 
@@ -274,5 +270,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 end
+```
+
+
+
+cf) [기타 sns 인증서비스로 로그인하기](https://luciuschoi.gitbooks.io/exploring_devise/content/devise_omniauth/omniauth-twitter.html)
+
+```ruby
+class_eval %Q{def sam} #string을 code로 만들어 준다 => 중복되는 코드 줄여준다
 ```
 
