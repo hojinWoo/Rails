@@ -1,5 +1,11 @@
 source 'https://rubygems.org'
 
+gem 'aws-sdk-s3'
+
+gem 'tinymce-rails'
+gem 'tinymce-rails-langs'
+gem 'tinymce-rails-imageupload', '~> 4.0.0.beta'
+
 gem 'devise'
 gem 'pry-rails'
 gem 'simple_form'
