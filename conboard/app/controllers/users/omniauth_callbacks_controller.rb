@@ -3,28 +3,17 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # You should configure your model like this:
   # devise :omniauthable, omniauth_providers: [:twitter]
+  def facebook
+    p request.env['omniauth.auth']
+    auth = env['omniauth.auth']
+    @user = User.find_auth(auth)
 
-  # You should also create an action method in this controller like this:
-  # def twitter
-  # end
-
-  # More info at:
-  # https://github.com/plataformatec/devise#omniauth
-
-  # GET|POST /resource/auth/twitter
-  # def passthru
-  #   super
-  # end
-
-  # GET|POST /users/auth/twitter/callback
-  # def failure
-  #   super
-  # end
-
-  # protected
-
-  # The path used when OmniAuth fails
-  # def after_omniauth_failure_path_for(scope)
-  #   super(scope)
-  # end
+    #user가 실제 저장되었는지 체크
+    if @user.persisted?
+      redirect_to '/'
+    else
+      #저장이 안 된 경우 다시 회원가입 하도록 하기
+      redirect_to new_user_registration_path
+    end
+  end
 end
