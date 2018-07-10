@@ -2,7 +2,9 @@
 <%= @post.id %>번째 글
 <%= @post.title %>
 <%= @post.content %>
-
+<%= image_tag @post.img %>
+<%= image_tag @post.img.thumb_fit.url %>
+<%= image_tag @post.img.thumb_fill.url %>
 <!-- 여기서 안 보여줄 수 있지만 이렇게 하면 url로 접근이 가능하므로 controller에서도 수정 필요. -->
 <%# if current_user.id == @post.user.id %>
 <!-- can gem을 이용해서 설정 -->

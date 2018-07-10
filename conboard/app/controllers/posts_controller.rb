@@ -90,6 +90,7 @@ class PostsController < ApplicationController
     redirct_to "/"
   end
 
+
   private
     def set_post
       @post = Post.find(params[:id])
@@ -100,6 +101,6 @@ class PostsController < ApplicationController
 
       # form_for로 hash안에 있는 것을 사용할 때 사용(이중 hash를 사용하기 때문)
       # @post가 비어있는 경우 create로 보내고, 값이 있는 경우 update로 보낸다.
-      params.require(:post).permit(:title, :content)
+      params.require(:post).permit(:title, :content, :img)
     end
 end
