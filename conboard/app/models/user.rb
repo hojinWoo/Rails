@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, omniauth_providers: [:facebook]
+         :omniauthable, omniauth_providers: [:facebook, :kakao]
 
   has_many :posts
   has_many :comments
@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   has_many :liked_posts, through: :likes, source: :post
 
   # User.find_auth
-  def self.find_auth(auth, signed_in_resource=nil) #signed_in_resource : 로그인 된 사람이 있으면 return 
+  def self.find_auth(auth, signed_in_resource=nil) #signed_in_resource : 로그인 된 사람이 있으면 return
     #identity가 있는지?
     identity = Identity.find_auth(auth)
     #있으면 user_id가 있기 때문에 user object가 return하고
@@ -24,12 +24,20 @@ class User < ActiveRecord::Base
       user = User.find_by(email: auth.info.email) #중복 체크
       #같은 email을 쓰는 user가 있는 지
       if user.nil?
-        user = User.new(
-          email: auth.info.email,
-          name: auth.info.name,
-          password: Devise.friendly_token[0,20],
-          profile_img: auth.info.image
-        )
+        if auth.provider == 'kakao'
+          user = User.new(
+            name: auth.info.name,
+            password: Devise.friendly_token[0,20],
+            profile_img: auth.info.image
+          )
+        else
+          user = User.new(
+            email: auth.info.email,
+            name: auth.info.name,
+            password: Devise.friendly_token[0,20],
+            profile_img: auth.info.image
+          )
+        end
       end
     end
     user.save!
@@ -38,5 +46,9 @@ class User < ActiveRecord::Base
         identity.save!
     end
     user #return을 user로 하기 위해
+  end
+
+  def email_required?
+    false
   end
 end

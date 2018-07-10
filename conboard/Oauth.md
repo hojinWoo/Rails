@@ -155,3 +155,124 @@ gravatar(current_user)가 기존에 있다면 주석 처리하기-->
  	...
 ```
 
+
+
+### 카카오 로그인
+
+[카카오 개발자]()
+
+- Rest ApI key 발급 하기
+
+  ```yaml
+  # config/application.yml
+  KAKAO_APP_KEY: YOUR_REST_API_KEY
+  ```
+
+- [설정] - [사용자 관리] 활성화하기
+
+- [설정] - [일반] - [플랫폼 추가] 
+
+  - 사이트 도메인 : `localhost:3000`
+  - Redirect Path : `/users/auth/kakao/callback
+
+```ruby
+#gemfile
+gem 'omniauth-kakao', :git => 'https://github.com/hcn1519/omniauth-kakao'
+```
+
+> bundle update&&bundle install
+
+```ruby
+# config/initializers/devise.rb 261 line 추가
+...
+	config.omniauth :kakao, ENV['KAKAO_APP_KEY'], redirect_path: '/users/auth/kakao/callback'
+...
+```
+
+```ruby
+# app/models/user.rb
+class User < ActiveRecord::Base
+    ```
+	devise ```
+			:omniauthable, omniauth_providers: [:facebook, :kakao] #카카오 추가
+end
+```
+
+```ruby
+# app/controller/user/omniauth_callbacks_controller.rb
+# facebook이랑 내용은 똑같다
+def kakao
+	```
+  	```
+end
+
+#카카오는 action이 다르기 때문에 위의 것들을 validate하지 않아서 다시 한 번 검사 필요
+#method 이름 변경 X
+def after_sign_in_path_for(resource)
+  auth = request.env['omniauth.auth']
+  @identity = Identity.find_auth(auth)
+  @user = User.find(current_user.id)
+  if @user.persisted?
+    if auth.provider == 'kakao' && @user.email.empty?
+      return users_info_path
+    end
+  end
+  '/'
+end
+```
+
+> 카카오는 email이 넘어오지 않기 때문에 추가 수정 필요
+
+```ruby
+# app/models/user.rb
+    if user.nil?
+      ```
+	  ```
+      if user.nil?
+        if auth.provider == 'kakao'
+          user = User.new(
+            name: auth.info.name,
+            password: Devise.friendly_token[0,20],
+            profile_img: auth.info.image
+          )
+  	   ```
+	   ```
+    def email_required?
+        false
+    end
+```
+
+```ruby
+# app/config/routes.rb
+...
+  devise_scope :user do
+      #get, patch요청을 하나의 action에서 2가지 처리
+      match 'users/info' => 'users/registrations#info', via: [:get, :patch] 
+  end
+...
+```
+
+```ruby
+# app/views/users/registrations/info.html.erb
+# get 요청인 경우 처리
+<%= simple_form_for(current_user, url: users_info_path) do |f|%>
+<%= f.input :email, autofocus: true %>
+<%= f.submit '제출', class: 'btn btn-primary'%>
+<% end %>
+```
+
+```ruby
+# app/controllers/users/registration_controller.rb
+# patch 요청인 경우 처리
+class Users::RegistrationsController < Devise::RegistrationsController
+  def info
+    if request.patch? && params[:user]
+      if current_user.update(params.require(:user).permit(:email))
+        sign_in(current_user, bypass: true)
+        redirect_to '/', notice: '이메일 정보가 등록되었습니다.'
+      end
+    end
+  end
+end
+```
+

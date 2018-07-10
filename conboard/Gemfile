@@ -6,7 +6,7 @@ gem 'aws-sdk-s3'
 gem 'tinymce-rails'
 gem 'tinymce-rails-langs'
 gem 'tinymce-rails-imageupload', '~> 4.0.0.beta'
-
+gem 'omniauth-kakao', :git => 'https://github.com/hcn1519/omniauth-kakao'
 gem 'devise'
 gem 'pry-rails'
 gem 'simple_form'
