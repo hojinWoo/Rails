@@ -271,7 +271,7 @@ $ rails s -b 0.0.0.0
 
 >  `<a>` tag로는 Get 요청, `<form>` tag로 Post 요청만 보낼 수 있다.
 
-### link_to : url helper(http://api.rubyonrails.org/v5.2/classes/ActionView/Helpers/UrlHelper.html)
+### [link_to : url helper](http://api.rubyonrails.org/v5.2/classes/ActionView/Helpers/UrlHelper.html)
 
 ```erb
 <%= link_to '글 보기', @post %>
@@ -585,6 +585,19 @@ current_user.liked_posts.include? Post.find(20)
 - ##### 나중에는 ajax로 처리할 것 => url이 안 보여야 하기 때문
 
 
+
+##### 댓글이 삭제 될 때 db에서도 처리가 되도록 하는 방법은 다양하다
+
+```ruby
+# app/models/post.rb
+# ex) 같이 삭제되도록
+class Post < ActiveRecord::Base
+  has_many :comments, dependent: :destroy
+  ...
+end
+```
+
+- ##### [Callback](https://guides.rorlab.org/active_record_callbacks.html)
 
 
 
