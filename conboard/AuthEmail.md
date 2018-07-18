@@ -12,7 +12,7 @@
   (나중에 상용 시 실제 서비스할 이메일로 등록하면 된다.)
 
 - [SMTP Settings] - [Create My SMTP Credentials] 해서 SMTP 사용자 만들기
-  ![confirm email](./app/assets/mages/verify.png)
+  ![confirm email](./app/assets/images/verify.png)
 
   **SMTP 사용자 이름과 비밀번호는 개인이 가지고 있어야 한다.**
 
@@ -102,7 +102,7 @@
 
 
 - 회원 가입 시 인증 메일이 날아온다(도메인을 입력 안한 경우 메일이 스팸 메일에 있을 것)
-  ![confirm email](./app/assets/mages/email.png)
+  ![confirm email](./app/assets/images/email.png)
 
   ```erb
   <!-- views/users/mailer/confirmation_instructions.html.erb --> 
@@ -110,3 +110,4 @@
   ```
 
   **비밀번호를 잊어버렸을 때에도 메일이 와서 바꿀 수 있다.**
+
